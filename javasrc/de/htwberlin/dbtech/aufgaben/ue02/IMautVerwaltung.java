@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface IMautVerwaltung {
 
+	void updateStatusForOnBoardUnit(long fzg_id);
+
 	/**
 	 * Liefert den Status eines Fahrzeugerätes zurück.
 	 * 
