@@ -60,7 +60,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 
 	@Override
 	public int getUsernumber(int maut_id) {
-		// Angepasster Query mit JOINs, um die NUTZER_ID über FAHRZEUGGERAT und FAHRZEUG zu erhalten
+
 		String query = "SELECT F.NUTZER_ID " + // F.NUTZER_ID, da sie aus der FAHRZEUG-Tabelle kommt
 				"FROM MAUTERHEBUNG ME " +
 				"JOIN FAHRZEUGGERAT FG ON ME.FZG_ID = FG.FZG_ID " +
@@ -73,7 +73,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 			ps.setInt(1, maut_id);
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					// Auslesen der Spalte NUTZER_ID, die jetzt durch den Alias F referenziert wird
+
 					nutzer_id = rs.getInt("NUTZER_ID"); // Hier muss der Name der Spalte in der FAHRZEUG-Tabelle stehen
 				}
 			}
@@ -102,7 +102,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows == 0) {
 				L.warn("Fahrzeug mit FZ_ID " + fz_id + " konnte nicht registriert werden.");
-				// Optional: Eine spezifischere Exception werfen, wenn das Einfügen fehlschlägt
+
 				throw new DataException("Fehler: Fahrzeug mit FZ_ID " + fz_id + " konnte nicht registriert werden.");
 			} else {
 				L.info("Fahrzeug mit FZ_ID " + fz_id + " erfolgreich registriert.");
@@ -125,7 +125,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows == 0) {
 				L.warn("Status für Fahrzeuggerät mit FZG_ID " + fzg_id + " wurde nicht aktualisiert. Gerät möglicherweise nicht gefunden.");
-				// Optional: Eine spezifischere Exception werfen, wenn kein Eintrag gefunden wurde
+
 				throw new DataException("Fehler: Fahrzeuggerät mit FZG_ID " + fzg_id + " nicht gefunden oder Status bereits aktuell.");
 			} else {
 				L.info("Status für Fahrzeuggerät mit FZG_ID " + fzg_id + " auf '" + status + "' aktualisiert.");
@@ -147,7 +147,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 			int affectedRows = ps.executeUpdate();
 			if (affectedRows == 0) {
 				L.warn("Fahrzeug mit FZ_ID " + fz_id + " konnte nicht gelöscht werden. Fahrzeug möglicherweise nicht gefunden.");
-				// Optional: Eine spezifischere Exception werfen, wenn kein Eintrag gefunden wurde
+
 				throw new DataException("Fehler: Fahrzeug mit FZ_ID " + fz_id + " nicht gefunden oder bereits gelöscht.");
 			} else {
 				L.info("Fahrzeug mit FZ_ID " + fz_id + " erfolgreich gelöscht.");
@@ -162,7 +162,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 	@Override
 	public List<Mautabschnitt> getTrackInformations(String abschnittstyp) {
 		List<Mautabschnitt> mautabschnitte = new ArrayList<>();
-		// Angepasste Spaltennamen basierend auf der Mautabschnitt-Klasse
+
 		String query = "SELECT abschnitts_id, laenge, start_koordinate, ziel_koordinate, name, abschnittstyp FROM MAUTABSCHNITT WHERE abschnittstyp = ?";
 
 		try (PreparedStatement ps = getConnection().prepareStatement(query)) {
@@ -176,7 +176,7 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 					String name = rs.getString("name");
 					String typ = rs.getString("abschnittstyp");
 
-					// Verwende den vollständigen Konstruktor der Mautabschnitt-Klasse
+
 					Mautabschnitt mautabschnitt = new Mautabschnitt(
 							abschnitts_id,
 							laenge,
