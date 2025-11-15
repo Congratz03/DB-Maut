@@ -37,26 +37,26 @@ public class MautVerwaltungImpl implements IMautVerwaltung {
 
 	}
 
+	@Override
 	public String getStatusForOnBoardUnit(long fzg_id) {
-		PreparedStatement preparedstatement = null;
-		ResultSet resultSet = null;
 		String query = "SELECT STATUS FROM FAHRZEUGGERAT WHERE FZG_ID = ?";
-		String res = "";
-		try {
 
-			preparedstatement = getConnection().prepareStatement(query);
-			preparedstatement.setLong(1, fzg_id);
-			resultSet = preparedstatement.executeQuery();
-			if (resultSet.next()) {
-				res = resultSet.getString("STATUS");
+		try (PreparedStatement ps = getConnection().prepareStatement(query)) {
+			ps.setLong(1, fzg_id);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return rs.getString("STATUS");
+				}
 			}
-		} catch (SQLException exp) {
-			throw new RuntimeException(exp);
-		} catch (NullPointerException exp) {
-			throw new RuntimeException(exp);
+		} catch (SQLException e) {
+			L.error("Fehler beim Abrufen des Status für FZG_ID: " + fzg_id, e);
+			throw new DataException("Fehler beim Abrufen des Status.", e);
 		}
-		return res;
+
+		L.warn("Kein Status gefunden für FZG_ID: " + fzg_id);
+		return "";
 	}
+
 
 	@Override
 	public int getUsernumber(int maut_id) {
